@@ -32,12 +32,7 @@ def calc_med_salaries():
 	    y="Salary (in USD)"
 	)
 
-	return med_salaries, bar_plot
-
+	st.altair_chart(bar_plot, use_container_width=True)
 # show the table and bar plot of the mean salaries
-with st.container():
-	med_salaries, med_saleries_chart = calc_med_salaries()
-	col1, col2 = st.columns(2)
-	col1.write(med_salaries)
-	col2.altair_chart(med_saleries_chart, use_container_width=True)
+calc_med_salaries()
 	
