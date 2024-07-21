@@ -30,7 +30,9 @@ st.title(f"Exploring The Salaries of {job}s in 2023")
 
 ### function to calculate statistics about the salary of the job
 def calc_salary_info(job_data):
+	## create container
 	with st.container():
+		# create two columns inside container
 		col1, col2 = st.columns(2)
 		## calculate the summary statistics of the salary
 		sum_stats = job_data["salary_in_usd"].describe()
@@ -42,20 +44,53 @@ def calc_salary_info(job_data):
 		col1.write(f"* median salary was ${sum_stats['50%']:,.2f}")
 		col1.write(f"* mean salary was ${sum_stats['mean']:,.2f}")
 
-		## create a box plot showing the summary statistics
-		fig = px.box(job_data, 
-					 y="salary_in_usd")
-		## add labels
+		# create a box plot showing the summary statistics
+		fig = px.box(job_data, y="salary_in_usd")
+		# add labels
 		fig.update_layout(title = f"Overall Salaries of {job}s",
+						  title_x = 0.25,
 						  yaxis_title = "Salary",
 						  xaxis_title = job)
-		## show box plot
+		# show box plot
 		col2.plotly_chart(fig)
 	
 ### show the table and bar plot of the mean salaries
 calc_salary_info(job_data)
 
-### 
+st.title("Type of Employment")
+### generate figures describing the type of employment
+def show_job_type(job_data):
+	## add a bar chart showing the number of employees at each country
+	with st.container():
+		# count the number of data scientists in each country
+		job_counts = job_data["employee_residence"].value_counts().reset_index()
+		# create bar chart show
+		fig = px.bar(job_counts, x="employee_residence", y="count", title="Company Location")
+		# format labels
+		fig.update_layout(title_x = 0.5,
+						  xaxis_title = "Country",
+						  yaxis_title = f"# of {job}s")
+		# show bar chart
+		st.plotly_chart(fig)
+
+	## create 3 pie charts
+	with st.container():
+		# create three columns
+		col1, col2, col3 = st.columns(3)
+		# show a pie chart of % of all remote jobs in first column
+		fig1 = px.pie(job_data, names="remote_ratio", title="% Remote")
+		col1.plotly_chart(fig1)
+
+		# show a pie chart showing employment type in second column
+		fig2 = px.pie(job_data, names="employment_type", title="Employment Type")
+		col2.plotly_chart(fig2)
+
+		# show a pie chart showing size the companies that employees worked at in third column
+		fig3 = px.pie(job_data, names="company_size", title="Company Size")
+		col3.plotly_chart(fig3)
+
+### show figures describing the job type
+show_job_type(job_data)
 
 ### add title of dashboard
 # st.header(f"How does the salary of a {job} vary based on different factors \
