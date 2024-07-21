@@ -2,7 +2,6 @@
 # Analyzing Data Science Careers in 2023
 
 ## Motivation
----
 I wanted to create an interactive dashboard for students like me who are also interested in understanding more about the employment and salary of a career in the data science field. This dashboard could help them make an informative decision if the career suits their ideal lifestyle.
 
 As someone who wants to become a data scientist, I was curious about the following:
@@ -16,7 +15,6 @@ Therefore, I decided to develop a dashboard that could answer this question for 
 
 
 ## Dashboard Overview
----
 This dashboard is viewable at: [https://ds-jobs.streamlit.app](https://ds-jobs.streamlit.app).
 The sidebar of the dashboard allows the user to select or type in a data science related career of their interest. The main page will then provide visualizations summarizing the following:
 * the salary of that job in 2023
@@ -28,6 +26,5 @@ These
 
 
 ## Dataset
----
 To dataset used to generate the visualizations was downloaded from Kaggle[^1].
 [^1]: https://www.kaggle.com/datasets/arnabchaki/data-science-salaries-2023).
