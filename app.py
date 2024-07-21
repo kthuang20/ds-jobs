@@ -17,6 +17,11 @@ with st.sidebar:
 
 	# import the dataset
 	ds_salaries = pd.read_csv("./ds_salaries.csv")
+	# select only jobs that have more than 50 recorded people
+	job_counts = ds_salaries.groupby("job_title").size()
+	most_recorded_jobs = job_counts.index[job_counts > 50].tolist()
+	# keep only the data with the top most recorded job titles
+	ds_salaries = ds_salaries[ds_salaries["job_title"].isin(most_recorded_jobs)]
 
 	# ask the user to input the job they're interested in learning about
 	job = st.selectbox("Enter the job title of interest:",
@@ -25,6 +30,7 @@ with st.sidebar:
 	# select only the data for that job of interest
 	job_data = ds_salaries[ds_salaries["job_title"] == job]
 
+st.write()
 ### add title
 st.title(f"Exploring The Salaries of {job}s in 2023")
 
@@ -45,7 +51,7 @@ def calc_salary_info(job_data):
 		col1.write(f"* mean salary was ${sum_stats['mean']:,.2f}")
 
 		# create a box plot showing the summary statistics
-		fig = px.box(job_data, y="salary_in_usd")
+		fig = px.box(job_data, y = "salary_in_usd")
 		# add labels
 		fig.update_layout(title = f"Overall Salaries of {job}s",
 						  title_x = 0.25,
@@ -77,24 +83,27 @@ def show_job_type(job_data):
 	with st.container():
 		# create three columns
 		col1, col2, col3 = st.columns(3)
+		
+		# add a column containing the labels for the numbers representing remote ratios
+		fig1_labels = {0:"Onsite", 50: "Hybrid", 100:"Fully Remote"}
+		job_data["remote_labels"] = job_data["remote_ratio"].map(fig1_labels)
 		# show a pie chart of % of all remote jobs in first column
-		fig1 = px.pie(job_data, names="remote_ratio", title="% Remote")
+		fig1 = px.pie(job_data, names="remote_labels", title="% Remote")
 		col1.plotly_chart(fig1)
 
+		# replace employment type labels with full descriptions
+		fig2_labels = {"FT": "Full Time", "PT": "Part Time", "CT": "Contract Worker"}
+		job_data["employment_type"] = job_data["employment_type"].map(fig2_labels)
 		# show a pie chart showing employment type in second column
 		fig2 = px.pie(job_data, names="employment_type", title="Employment Type")
 		col2.plotly_chart(fig2)
 
+		# replace company size labels with full description
+		fig3_labels = {"M": "Medium", "L": "Large", "S": "Small"}
+		job_data["company_size"] = job_data["company_size"].map(fig3_labels)
 		# show a pie chart showing size the companies that employees worked at in third column
 		fig3 = px.pie(job_data, names="company_size", title="Company Size")
 		col3.plotly_chart(fig3)
 
 ### show figures describing the job type
 show_job_type(job_data)
-
-### add title of dashboard
-# st.header(f"How does the salary of a {job} vary based on different factors \
-# 	like experience level, employment type, remote work ratio, and company size?")
-
-job_data
-
